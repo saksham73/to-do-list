@@ -25,4 +25,24 @@
       </form>
   </div>
 
+  <div class=box>
+    <ul>
+      <li><a href="/">Today</a></li>
+    </ul>
+      <% listsList.forEach(function(list){%>
+        <form action="/deleteList" method="POST" >
+          <div class="item">
+            <input type="checkbox" name="check" value="<%= list.name%>" onChange="this.form.submit()">
+            <a href="/<%= list.name%>"><%= list.name%></a>
+          </div>
+        </form>
+      <%})%>
+
+    <form class="item" action="/newList" method="POST">
+      <input type="text" name="newListName" placeholder="Enter The new List Name you want to create" autocomplete="off">
+      <button type="submit">+</button>
+    </form>
+    
+  </div>
+
 <%- include("footer") -%>

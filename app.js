@@ -57,7 +57,15 @@ app.get("/", function(req, res) {
       });
       res.redirect("/");
     } else {
-      res.render("list", {listTitle: "Today", newListItems: foundItems});
+      List.find({},function(e,Listlist){
+        if(e){
+          console.log("Something Gone wrong while quering lists collection.");
+          
+        }else{
+          res.render("list", {listTitle: "Today", newListItems: foundItems, listsList: Listlist});
+        }
+      })
+      
     }
   });
 
@@ -78,8 +86,11 @@ app.get("/:customListName", function(req, res){
         res.redirect("/" + customListName);
       } else {
         //Show an existing list
-
-        res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
+        List.find({},function(e,Listlist){
+          if(!e){
+            res.render("list", {listTitle: foundList.name, newListItems: foundList.items, listsList: Listlist});
+          }
+        });
       }
     }
   });
@@ -133,6 +144,21 @@ app.post("/delete", function(req, res){
 
 app.get("/about", function(req, res){
   res.render("about");
+});
+
+app.post("/newList",function(req,res){
+  const newListName = req.body.newListName;
+  res.redirect("/"+newListName);
+});
+
+app.post("/deleteList", function(req,res){
+  const listName=req.body.check;
+  List.deleteOne({name : listName}, function(err){
+    if(!err){
+      console.log("Successfully deleted the requested list.");
+      res.redirect("/");
+    }
+  })
 });
 
 app.listen(3000, function() {
